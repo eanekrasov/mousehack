@@ -21,7 +21,6 @@ namespace mousehack
     public partial class MainWindow : Window
     {
         UsbWrapper device = new UsbWrapper(0x047, 0x045e); // pid и vid нужной мыши
-        //InterceptMouse interceptor = new InterceptMouse();
 
         public MainWindow()
         {
@@ -29,7 +28,9 @@ namespace mousehack
 
             if (device.Open())
             {
-                // success
+                device.ButtonPressed += device_ButtonPressed;
+                device.ButtonReleased += device_ButtonReleased;
+                device.StartThread();
             }
             else
             {
@@ -37,21 +38,14 @@ namespace mousehack
             }
         }
 
-        private void Window_Closed(object sender, EventArgs e)
+        void device_ButtonPressed(object sender, UsbWrapper.ButtonEventArgs e)
         {
-            device.Close();
+            MessageBox.Show(string.Format("Button {0} pressed", e.button));
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        void device_ButtonReleased(object sender, UsbWrapper.ButtonEventArgs e)
         {
-            byte buttons = device.Read();
-            if ((buttons | 1) == buttons) {
-                MessageBox.Show("1");
-            }
-            if ((buttons | 2) == buttons)
-            {
-                MessageBox.Show("2");
-            }
+            MessageBox.Show(string.Format("Button {0} released", e.button));
         }
     }
 }
