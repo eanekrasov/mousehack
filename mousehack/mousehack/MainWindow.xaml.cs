@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Net;
+using System.IO;
 
 namespace mousehack
 {
@@ -41,6 +43,9 @@ namespace mousehack
         void device_ButtonPressed(object sender, UsbWrapper.ButtonEventArgs e)
         {
             MessageBox.Show(string.Format("Button {0} pressed", e.button));
+
+            WebRequest request = WebRequest.Create("http://example.com/?button=" + e.button);
+            request.GetResponse();
         }
 
         void device_ButtonReleased(object sender, UsbWrapper.ButtonEventArgs e)
